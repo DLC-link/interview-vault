@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BitSafe — AI-Assisted Engineering Task — Collateral Vault</title>
+<style>
+  :root {
+    --bg: #fafaf7;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --accent: #d94e1f;
+    --accent-soft: #fef0e8;
+    --rule: #e5e2db;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    margin: 0;
+    padding: 40px 24px;
+    line-height: 1.55;
+    font-size: 15px;
+  }
+  .doc { max-width: 760px; margin: 0 auto; }
+  header {
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .brand { color: var(--accent); font-weight: 800; letter-spacing: 0.06em; font-size: 13px; text-transform: uppercase; }
+  h1 { margin: 6px 0 4px; font-size: 26px; letter-spacing: -0.01em; }
+  .sub { color: var(--muted); font-size: 14px; }
+  h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em;
+    color: var(--accent); margin: 28px 0 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .callout {
+    background: var(--accent-soft); border-radius: 6px;
+    padding: 14px 18px; margin: 16px 0;
+  }
+  .callout .label {
+    color: var(--accent); font-weight: 700; font-size: 12px;
+    text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 6px;
+  }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 8px; }
+  code {
+    font-family: "SF Mono", Monaco, Consolas, monospace; font-size: 13px;
+    background: #f0eee8; padding: 1px 5px; border-radius: 3px;
+  }
+  .meta { display: grid; grid-template-columns: 130px 1fr; gap: 6px 16px; font-size: 14px; }
+  .meta .k { color: var(--muted); font-weight: 600; }
+  .endpoint { font-family: "SF Mono", Monaco, Consolas, monospace; font-size: 13.5px; }
+  .footer { margin-top: 32px; padding-top: 14px; border-top: 1px solid var(--rule); color: var(--muted); font-size: 13px; }
+  @media print { body { padding: 16px; } }
+</style>
+</head>
+<body>
+<div class="doc">
+
+<header>
+  <div class="brand">BitSafe</div>
+  <h1>AI-Assisted Engineering Task</h1>
+  <div class="sub">A small, staged live build. AI tools are allowed and expected. Think out loud, commit as you go.</div>
+</header>
+
+<div class="meta">
+  <span class="k">Format</span><span>One live session, staged. Stage&nbsp;1 first; we extend it once it runs.</span>
+  <span class="k">Stack</span><span>Use whatever language and tooling you're most productive in.</span>
+  <span class="k">Core signal</span><span>Judgment, correctness, and how you use AI — not finishing speed.</span>
+  <span class="k">Tools</span><span>Your editor, terminal, git, AI assistants, the web. All fair game.</span>
+</div>
+
+<div class="callout">
+  <span class="label">Read this first</span>
+  We care less about whether you finish and more about how you scope the problem, reason about
+  correctness, verify what AI gives you, and adapt when we change the requirements. Please think
+  out loud as you go.
+</div>
+
+<h2>Stage 1 — Collateral Vault</h2>
+
+<p>
+  Build a small backend service for a minimal <strong>collateral vault</strong> — a stripped-down
+  version of a wrapped-asset system. A user locks a collateral asset into the vault and receives
+  <em>receipt tokens</em> in return, one-for-one. They can later redeem receipts to get their
+  collateral back. Single user, single collateral type; keeping state in memory is fine for this stage.
+</p>
+
+<p>Expose a small HTTP API with roughly these operations:</p>
+<ul>
+  <li><span class="endpoint">POST /lock</span> — lock an amount of collateral; mint the same amount of receipts. Returns the updated balances.</li>
+  <li><span class="endpoint">POST /redeem</span> — burn an amount of receipts; release the same amount of collateral. Returns the updated balances.</li>
+  <li><span class="endpoint">GET /balance</span> — return collateral currently locked and receipts currently outstanding.</li>
+</ul>
+
+<div class="callout">
+  <span class="label">The one rule that must always hold</span>
+  Receipts outstanding must always equal collateral locked — the vault is fully backed, 1:1, at all
+  times. A user can never redeem more than they hold, and balances can never go negative. How you
+  represent and update balances is up to you; correctness here matters more than anything else.
+</div>
+
+<h3 style="font-size:14px; margin-bottom:6px;">What "done" looks like for Stage 1</h3>
+<ul>
+  <li>The service runs and the three operations work end-to-end.</li>
+  <li>Invalid requests are rejected with sensible HTTP status codes (bad input vs. a disallowed operation are not the same thing).</li>
+  <li>At least one test covering the highest-risk path — pick the one that matters most.</li>
+  <li>Commits at sensible points. Say out loud what you're deferring and why.</li>
+</ul>
+
+<h2>Stage 2</h2>
+<p>
+  Once Stage 1 runs, we'll extend it together — be ready to adapt. We're interested in how you
+  handle a shift in requirements, not in you guessing what's coming.
+</p>
+
+<h2>Permissions &amp; notes</h2>
+<ul>
+  <li>AI assistants are allowed and expected. Use them the way you normally would — we'll ask you about the code afterward.</li>
+  <li>No authentication, no database, and no persistence are required for Stage 1.</li>
+  <li>No real blockchain or external services are involved — this is a self-contained service.</li>
+</ul>
+
+<div class="footer">
+  We are not measuring whether you finish the vault. We're measuring whether you can turn a small,
+  slightly ambiguous brief into a correct, production-shaped service, use AI without losing ownership
+  of the result, and adapt when the requirements move.
+</div>
+
+</div>
+</body>
+</html>
